@@ -1,0 +1,201 @@
+{
+  "name": "cat-fact-ollama-sheets",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        -320
+      ],
+      "id": "05a127e1-4f40-4738-b9b2-2e17efb3977e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://catfact.ninja/fact",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -160,
+        -320
+      ],
+      "id": "74c1b715-10a1-428c-9801-8887903c3e6d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "627da124-c328-41f4-a5c4-29dec6941aa2",
+              "name": "fact",
+              "value": "={{ $json.fact }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -320
+      ],
+      "id": "0dc8c7a1-ab77-48a4-822f-26ad477bd2ab",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "mistral:latest",
+          "mode": "list",
+          "cachedResultName": "mistral:latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Make this cat fact funnier and more interesting: \n{{ $json.fact }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.ollama",
+      "typeVersion": 1,
+      "position": [
+        288,
+        -320
+      ],
+      "id": "031f2075-1aac-473e-ab2b-eddbcad11d4c",
+      "name": "Message a model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "IDryRo5Rrchyt1ko",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1OSasVnxOb5fJYfUGaZ_hQQq-Zs5SUytdtcKUXEZopK4",
+          "mode": "list",
+          "cachedResultName": "my_cat_sheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OSasVnxOb5fJYfUGaZ_hQQq-Zs5SUytdtcKUXEZopK4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1OSasVnxOb5fJYfUGaZ_hQQq-Zs5SUytdtcKUXEZopK4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "catFact": "={{ $json.content }}"
+          },
+          "matchingColumns": [
+            "catFact"
+          ],
+          "schema": [
+            {
+              "id": "catFact",
+              "displayName": "catFact",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        640,
+        -320
+      ],
+      "id": "a3c0f72e-8e17-4cd8-8937-8693f3f244b9",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "t7umDviGCnIFta0f",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "160abed8-985a-4eeb-91bb-261c45e7235c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd22f34df5e52a86d11ca9a9837a6939718aae3e1a2cd748e5b814caf7f2728b"
+  },
+  "id": "tsTbmEiyyCmiskUe",
+  "tags": []
+}
